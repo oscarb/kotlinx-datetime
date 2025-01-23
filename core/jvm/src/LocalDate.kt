@@ -86,9 +86,10 @@ public actual class LocalDate internal constructor(internal val value: jtLocalDa
     public actual fun toEpochDays(): Long = value.toEpochDay()
 
     @PublishedApi
-    @Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
+    @Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER", "ACTUAL_MISSING")
     @LowPriorityInOverloadResolution
-    internal fun toEpochDays(): Int = value.toEpochDay().clampToInt()
+    @JvmName("toEpochDays")
+    internal fun toEpochDaysCompat(): Int = value.toEpochDay().clampToInt()
 }
 
 @Deprecated("Use the plus overload with an explicit number of units", ReplaceWith("this.plus(1, unit)"))
@@ -158,7 +159,8 @@ public actual fun LocalDate.until(other: LocalDate, unit: DateTimeUnit.DateBased
 @PublishedApi
 @Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
 @LowPriorityInOverloadResolution
-internal fun LocalDate.until(other: LocalDate, unit: DateTimeUnit.DateBased): Int =
+@JvmName("until")
+internal fun LocalDate.untilCompat(other: LocalDate, unit: DateTimeUnit.DateBased): Int =
     until(other, unit).clampToInt()
 
 public actual fun LocalDate.daysUntil(other: LocalDate): Int =

@@ -14,25 +14,29 @@ java {
 }
 
 kotlin {
-    infra {
-        target("linuxX64")
-        target("linuxArm64")
-        target("linuxArm32Hfp")
-        target("mingwX64")
-        target("macosX64")
-        target("macosArm64")
-        target("iosX64")
-        target("iosArm64")
-        target("iosSimulatorArm64")
-        target("watchosArm32")
-        target("watchosArm64")
-        target("watchosX64")
-        target("watchosSimulatorArm64")
-        target("watchosDeviceArm64")
-        target("tvosArm64")
-        target("tvosX64")
-        target("tvosSimulatorArm64")
-    }
+    linuxX64()
+    linuxArm64()
+    @Suppress("DEPRECATION")
+    linuxArm32Hfp()
+    mingwX64()
+    macosX64()
+    macosArm64()
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
+    watchosArm32()
+    watchosArm64()
+    watchosX64()
+    watchosSimulatorArm64()
+    watchosDeviceArm64()
+    tvosArm64()
+    tvosX64()
+    tvosSimulatorArm64()
+    androidNativeArm32()
+    androidNativeArm64()
+    androidNativeX86()
+    androidNativeX64()
+
 
     jvm {
         attributes {
@@ -47,7 +51,6 @@ kotlin {
             kotlinOptions {
                 sourceMap = true
                 moduleKind = "umd"
-                metaInfo = true
             }
         }
     }

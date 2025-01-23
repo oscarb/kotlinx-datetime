@@ -30,6 +30,7 @@ val Project.kotlinVersion: String
     }
 
 repositories {
+    mavenLocal()
     mavenCentral()
     gradlePluginPortal()
     addTrainRepositories(project)

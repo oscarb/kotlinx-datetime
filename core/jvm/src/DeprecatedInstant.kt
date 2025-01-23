@@ -24,7 +24,7 @@ import kotlin.time.Duration.Companion.seconds
 
 @Deprecated(
     "Use kotlin.time.Instant instead",
-    ReplaceWith("kotlinx.time.Instant", "kotlinx.time.Instant"),
+    ReplaceWith("kotlin.time.Instant", "kotlin.time.Instant"),
     level = DeprecationLevel.ERROR
 )
 @Serializable(with = InstantIso8601Serializer::class)

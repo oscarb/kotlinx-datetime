@@ -9,9 +9,10 @@ import kotlinx.datetime.*
 import kotlin.test.*
 import kotlinx.datetime.test.JSJoda.ZoneId as jtZoneId
 import kotlinx.datetime.test.JSJoda.Instant as jtInstant
-import kotlinx.time.Instant
-import kotlinx.time.Clock
+import kotlin.time.Instant
+import kotlin.time.Clock
 
+@OptIn(kotlin.time.ExperimentalTime::class)
 class TimezonesWithoutDatabaseTest {
     @Test
     fun system() {

@@ -35,7 +35,7 @@ private const val MAX_SECOND = 31556889864403199L // +1000000000-12-31T23:59:59Z
 
 @Deprecated(
     "Use kotlin.time.Instant instead",
-    ReplaceWith("kotlinx.time.Instant", "kotlinx.time.Instant"),
+    ReplaceWith("kotlin.time.Instant", "kotlin.time.Instant"),
     level = DeprecationLevel.ERROR
 )
 @Serializable(with = InstantIso8601Serializer::class)

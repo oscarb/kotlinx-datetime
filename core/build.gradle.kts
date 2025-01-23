@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream
 import java.io.PrintWriter
 import org.jetbrains.dokka.gradle.AbstractDokkaLeafTask
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.konan.target.Family
 
 plugins {
@@ -32,57 +33,65 @@ java {
     toolchain { languageVersion.set(JavaLanguageVersion.of(mainJavaToolchainVersion)) }
 }
 
+fun NamedDomainObjectContainer<KotlinSourceSet>.groupSourceSets(
+    groupName: String,
+    reverseDependencies: List<String>,
+    dependencies: List<String>
+) {
+    val sourceSetSuffixes = listOf("Main", "Test")
+    for (suffix in sourceSetSuffixes) {
+        register(groupName + suffix) {
+            for (dep in dependencies) {
+                dependsOn(get(dep + suffix))
+            }
+            for (revDep in reverseDependencies) {
+                get(revDep + suffix).dependsOn(this)
+            }
+        }
+    }
+}
+
 kotlin {
     explicitApi()
 
-    infra {
-        common("tzfile") {
-            // Tiers are in accordance with <https://kotlinlang.org/docs/native-target-support.html>
-            common("tzdbOnFilesystem") {
-                common("linux") {
-                    // Tier 1
-                    target("linuxX64")
-                    // Tier 2
-                    target("linuxArm64")
-                    // Tier 4 (deprecated, but still in demand)
-                    target("linuxArm32Hfp")
-                }
-                common("darwin") {
-                    common("darwinDevices") {
-                        // Tier 1
-                        target("macosX64")
-                        target("macosArm64")
-                        // Tier 2
-                        target("watchosX64")
-                        target("watchosArm32")
-                        target("watchosArm64")
-                        target("tvosX64")
-                        target("tvosArm64")
-                        target("iosArm64")
-                        // Tier 3
-                        target("watchosDeviceArm64")
-                    }
-                    common("darwinSimulator") {
-                        // Tier 1
-                        target("iosSimulatorArm64")
-                        target("iosX64")
-                        // Tier 2
-                        target("watchosSimulatorArm64")
-                        target("tvosSimulatorArm64")
-                    }
-                }
-            }
-            common("androidNative") {
-                target("androidNativeArm32")
-                target("androidNativeArm64")
-                target("androidNativeX86")
-                target("androidNativeX64")
-            }
-        }
-        // Tier 3
-        common("windows") {
-            target("mingwX64")
-        }
+    linuxX64()
+    linuxArm64()
+    @Suppress("DEPRECATION")
+    linuxArm32Hfp()
+    mingwX64()
+    macosX64()
+    macosArm64()
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
+    watchosArm32()
+    watchosArm64()
+    watchosX64()
+    watchosSimulatorArm64()
+    watchosDeviceArm64()
+    tvosArm64()
+    tvosX64()
+    tvosSimulatorArm64()
+    androidNativeArm32()
+    androidNativeArm64()
+    androidNativeX86()
+    androidNativeX64()
+
+    sourceSets {
+        groupSourceSets("linux", listOf("linuxX64", "linuxArm64", "linuxArm32Hfp"), emptyList())
+        groupSourceSets("darwinDevices",
+            listOf("macosX64", "macosArm64", "watchosX64", "watchosArm32", "watchosArm64", "tvosX64", "tvosArm64", "iosArm64"),
+            listOf()
+        )
+        groupSourceSets("darwinSimulator",
+            listOf("iosSimulatorArm64", "iosX64", "watchosSimulatorArm64", "tvosSimulatorArm64"),
+            listOf()
+        )
+        groupSourceSets("darwin", listOf("darwinDevices", "darwinSimulator"), emptyList())
+        groupSourceSets("tzdbOnFilesystem", listOf("linux", "darwin"), emptyList())
+        groupSourceSets("androidNative", listOf("androidNativeArm32", "androidNativeArm64", "androidNativeX86", "androidNativeX64"), listOf())
+        groupSourceSets("tzfile", listOf("tzdbOnFilesystem", "androidNative"), listOf("native"))
+        groupSourceSets("windows", listOf("mingwX64"), listOf("native"))
     }
 
     jvm {
@@ -107,7 +116,6 @@ kotlin {
             kotlinOptions {
                 sourceMap = true
                 moduleKind = "umd"
-                metaInfo = true
             }
         }
 //        compilations["main"].apply {
@@ -165,7 +173,6 @@ kotlin {
         commonMain {
             dependencies {
                 compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
-                api(project(":fake-kotlinx-time"))
             }
         }
 
@@ -247,6 +254,10 @@ kotlin {
 
         val darwinTest by getting {
         }
+    }
+
+    compilerOptions {
+        optIn.add("kotlin.time.ExperimentalTime")
     }
 }
 

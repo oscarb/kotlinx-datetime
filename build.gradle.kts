@@ -1,5 +1,5 @@
 plugins {
-    id("kotlinx.team.infra") version "0.4.0-dev-81"
+    id("kotlinx.team.infra") version "0.4.0-dev-82"
     kotlin("multiplatform") apply false
     id("org.jetbrains.kotlinx.kover") version "0.8.0-Beta2"
     id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.16.3"
@@ -24,6 +24,7 @@ allprojects {
     repositories {
         addTrainRepositories(project)
         mavenCentral()
+        mavenLocal()
     }
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
         // outputs the compiler version to logs so we can check whether the train configuration applied
